@@ -1,9 +1,9 @@
-import user_interface as us
+# import user_interface as us
 import logg 
 
-def mistake(i):
-	logg.type_num_logger(i)
-	us.error()
+# def mistake(i):
+# 	logg.type_num_logger(i)
+# 	us.error()
     
 
 def action():
@@ -13,7 +13,7 @@ def action():
         if i in ls:
             logg.entered_logger(i)
             return i
-        mistake(i)
+        # mistake(i)
         text = "Пользователь ввел: " + i + ". Это некорректный ввод"
         logg.actions_logger(text)
 
@@ -24,7 +24,7 @@ def digit():
         if i.isdigit():
             logg.entered_logger(i)
             return float(i)
-        mistake(i)
+        # mistake(i)
         print("Вам надо ввести число")
         text = "Пользователь ввел: " + i + ". Это некорректный ввод"
         logg.actions_logger(text)
@@ -35,7 +35,7 @@ def zero_number(s):
         if i !=0 :
             logg.entered_logger(i)
             return i
-        mistake(i)
+        # mistake(i)
         print("На ноль делить нельзя")
         text = "Пользователь ввел: 0. Это некорректный ввод"
         logg.actions_logger(text)
@@ -49,7 +49,7 @@ def digit_number(s):
         if k.isdigit():
             logg.entered_logger(i)
             return float(i)
-        mistake(i)
+        # mistake(i)
         print("Вам надо ввести число")
         text = "Пользователь ввел: " + i + ". Это некорректный ввод"
         logg.actions_logger(text)
