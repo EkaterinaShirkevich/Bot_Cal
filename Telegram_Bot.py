@@ -109,14 +109,16 @@ def res(update, _):
 def menu(update, _):
     user = update.message.from_user
     logger.info("Ответ бота: %s. Пользователь", user.first_name,"Ждет указаний")
-    reply_keyboard = [['Начнем']]
-    markup_key = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+    #reply_keyboard = [['Начнем']]
+    #markup_key = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
     update.message.reply_text(
         'Чтобы снова посчитать /start\n'
         'Хочешь завершить работу /cancel\n\n'
         'Твои действия?'
     )
     if update.message.from_user == '/start':
+        reply_keyboard = [['Начнем']]
+        markup_key = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
         update.message.reply_text(f'Я могу посчитать еще \n'
                               'Команда /cancel, чтобы прекратить разговор.\n\n'
                               'Начнем?',
