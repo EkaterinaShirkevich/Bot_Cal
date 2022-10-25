@@ -7,13 +7,13 @@ from telegram.ext import (
 )
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 import logging
-#from Info import Token
+from Info import Token
 import excep as ex
 import logg
 import compl
 import json
 
-Token = '5645070358:AAHTJADMoQkedNwWP-48e11juNrBZYinHVI'
+Token = Token()
 
 
 logging.basicConfig(
