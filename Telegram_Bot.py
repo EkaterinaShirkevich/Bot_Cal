@@ -11,7 +11,7 @@ from Info import Token
 import excep as ex
 import logg
 import compl
-import json
+
 
 Token = Token()
 
@@ -41,7 +41,7 @@ def start(update, _):
 def type_command(update, _):
     global type_num
     user = update.message.from_user
-    logger.info("Start", user.first_name, update.message.text)
+    logg.entered_logger(user.first_name, update.message.text)
     update.message.reply_text(f'Выбери с какими числами хочешь работать?\n\n'
                               '1.Рациональными \n'
                               '2.Комплексными')
@@ -63,9 +63,9 @@ def type_command(update, _):
 def action_num(update, _):
     global action, type_num
     # определяем пользователя
+
     user = update.message.from_user
-    # Пишем в журнал пол пользователя
-    logger.info("Числа %s: %s", user.first_name, update.message.text)
+    logg.entered_logger(user.first_name, update.message.text)
     type_num = update.message.text
     type_num = int(type_num)
     update.message.reply_text(f'Выбери дейстиве или /return чтобы вернуться\n\n'
@@ -81,7 +81,7 @@ def action_num(update, _):
 def give_num(update, _):
     global type_num, action
     user = update.message.from_user
-    logger.info("Действие %s: %s", user.first_name, update.message.text)
+    logg.entered_logger(user.first_name, update.message.text)
     action = update.message.text
     if type_num == 1:
         update.message.reply_text('Введите 2 числа через пробел: ')
@@ -94,7 +94,7 @@ def give_num(update, _):
 def res(update, _):
     global type_num, action, num1
     user = update.message.from_user
-    logger.info("Действие %s: %s", user.first_name, update.message.text)
+    logg.entered_logger(user.first_name, update.message.text)
     if type_num == 1:
         num1 = update.message.text
         num1 = num1.replace(' ', action)
@@ -112,8 +112,8 @@ def res(update, _):
 
 
 def menu(update, _):
-    # user = update.message.from_bot
-    # logger.info("Ответ бота: %s. Пользователь", user.first_name,"Ждет указаний")
+    user = update.message.from_user
+    logg.entered_logger(user.first_name, update.message.text)
     update.message.reply_text(
         'Чтобы снова посчитать /start\n'
         'Хочешь завершить работу /cancel\n\n'
@@ -127,10 +127,8 @@ def menu(update, _):
 
 
 def cancel(update, _):
-    # определяем пользователя
     user = update.message.from_user
-    # Пишем в журнал о том, что пользователь не разговорчивый
-    logger.info("Пользователь %s не хочет.", user.first_name)
+    logg.entered_logger(user.first_name, update.message.text)
     # Отвечаем на отказ поговорить
     update.message.reply_text(
         'Мое дело предложить - Ваше отказаться'
