@@ -7,13 +7,13 @@ from telegram.ext import (
 )
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 import logging
-from Info import Token
+#from Info import Token
 import excep as ex
 import logg
 import compl
-import json
 
-Token = Token()
+
+Token = '5645070358:AAEiWcF5fGIK4Z8TDtrD0oK2wWQdjSlP2us'#Token()
 
 
 logging.basicConfig(
@@ -41,7 +41,7 @@ def start(update, _):
 def type_command(update, _):
     global type_num
     user = update.message.from_user
-    logger.info("Start", user.first_name, update.message.text)
+    logg.entered_logger(user.first_name, update.message.text)
     update.message.reply_text(f'Выбери с какими числами хочешь работать?\n\n'
                               '1.Рациональными \n'
                               '2.Комплексными')
@@ -51,7 +51,7 @@ def type_command(update, _):
 def action_num(update, _):
     global action, type_num
     user = update.message.from_user
-    logger.info("Числа %s: %s", user.first_name, update.message.text)
+    logg.entered_logger(user.first_name, update.message.text)
     type_num = update.message.text
     type_num = int(type_num)
     update.message.reply_text(f'Выбери дейстиве или /return чтобы вернуться\n\n'
@@ -66,7 +66,7 @@ def action_num(update, _):
 def give_num(update, _):
     global type_num, action
     user = update.message.from_user
-    logger.info("Действие %s: %s", user.first_name, update.message.text)
+    logg.entered_logger(user.first_name, update.message.text)
     action = update.message.text
     if action == '/return':
         update.message.reply_text(
@@ -88,27 +88,30 @@ def res(update, _):
     markup_key = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
     global type_num, action, num1
     user = update.message.from_user
-    logger.info("Действие %s: %s", user.first_name, update.message.text)
+    logg.entered_logger(user.first_name, update.message.text)
     if type_num == 1:
         num1 = update.message.text
         num1 = num1.replace(' ', action)
-        update.message.reply_text(f'Ваш результат: {num1}={round(eval(num1))}\n\n'
+        res1 = round(eval(num1))
+        update.message.reply_text(f'Ваш результат: {num1}={res1}\n\n'
         'Может еще примерчик?\n\n '
         'Твои действия?', reply_markup=markup_key)
     elif type_num == 2:
         num1 = update.message.text
-        k = compl.cal_compl(num1, action)
-        print(k)
-        update.message.reply_text(f'Ваш результат: {k}\n\n'
+        res1 = compl.cal_compl(num1, action)
+        print(res1)
+        update.message.reply_text(f'Ваш результат: {res1}\n\n'
         'Может, еще примерчик?\n\n '
         'Твои действия?', reply_markup=markup_key)
+    logg.result_logger(res1) # логгер для результата
     return MENU
 
 
 def menu(update, _):
     global action
     user = update.message.from_user
-    logger.info("Ответ бота: %s. Пользователь", user.first_name,"Ждет указаний")
+    logg.entered_logger(user.first_name, update.message.text)
+    #logger.info("Ответ бота: %s. Пользователь", user.first_name,"Ждет указаний")
     action = update.message.text
     if action == 'Продолжить':
         update.message.reply_text(f'ОК, посчитаем еще. \n'
@@ -117,6 +120,7 @@ def menu(update, _):
                               '2.Комплексными')
         return ACTION
     elif action == 'Завершить':
+        logg.finished_logger(user.first_name, update.message.text)
         update.message.reply_text(
         'Мое дело предложить - Ваше отказаться'
         ' Будет скучно - пиши.')
@@ -124,10 +128,8 @@ def menu(update, _):
 
 
 def cancel(update, _):
-    # определяем пользователя
     user = update.message.from_user
-    # Пишем в журнал о том, что пользователь не разговорчивый
-    logger.info("Пользователь %s не хочет.", user.first_name)
+    logg.finished_logger(user.first_name, update.message.text)
     # Отвечаем на отказ поговорить
     update.message.reply_text(
         'Мое дело предложить - Ваше отказаться'
