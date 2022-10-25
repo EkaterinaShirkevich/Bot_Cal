@@ -50,9 +50,7 @@ def type_command(update, _):
 
 def action_num(update, _):
     global action, type_num
-    # определяем пользователя
     user = update.message.from_user
-    # Пишем в журнал пол пользователя
     logger.info("Числа %s: %s", user.first_name, update.message.text)
     type_num = update.message.text
     type_num = int(type_num)
@@ -62,7 +60,6 @@ def action_num(update, _):
                               'Умножение: "*"\n'
                               'Деление: "/"'
                               )
-    #action = update.message.text
     return GIVE_NUM
 
 
@@ -73,7 +70,7 @@ def give_num(update, _):
     action = update.message.text
     if action == '/return':
         update.message.reply_text(
-        'Ну, ладно. Можешь перевыбрать, или /cancel если хочешь завершить работу.'
+        'Ну, ладно. Можешь перевыбрать\n'
         f'Выбери с какими числами хочешь работать?\n\n'
                               '1.Рациональными \n'
                               '2.Комплексными')
@@ -87,7 +84,7 @@ def give_num(update, _):
 
 
 def res(update, _):
-    reply_keyboard = [['Продолжить']]
+    reply_keyboard = [['Продолжить'], ['Завершить']]
     markup_key = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
     global type_num, action, num1
     user = update.message.from_user
@@ -95,37 +92,35 @@ def res(update, _):
     if type_num == 1:
         num1 = update.message.text
         num1 = num1.replace(' ', action)
-        update.message.reply_text(f'{num1}={round(eval(num1))}', reply_markup=markup_key,)
-
+        update.message.reply_text(f'Ваш результат: {num1}={round(eval(num1))}\n\n'
+        'Может еще примерчик?\n\n '
+        'Твои действия?', reply_markup=markup_key)
     elif type_num == 2:
         num1 = update.message.text
         k = compl.cal_compl(num1, action)
         print(k)
-        update.message.reply_text(f'{k}',reply_markup=markup_key,)
-                                  #reply_markup=ReplyKeyboardRemove())
+        update.message.reply_text(f'Ваш результат: {k}\n\n'
+        'Может, еще примерчик?\n\n '
+        'Твои действия?', reply_markup=markup_key)
     return MENU
 
 
 def menu(update, _):
+    global action
     user = update.message.from_user
     logger.info("Ответ бота: %s. Пользователь", user.first_name,"Ждет указаний")
-    #reply_keyboard = [['Начнем']]
-    #markup_key = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
-    update.message.reply_text(
-        'Чтобы снова посчитать /start\n'
-        'Хочешь завершить работу /cancel\n\n'
-        'Твои действия?'
-    )
-    if update.message.from_user == '/start':
-        reply_keyboard = [['Начнем']]
-        markup_key = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
-        update.message.reply_text(f'Я могу посчитать еще \n'
-                              'Команда /cancel, чтобы прекратить разговор.\n\n'
-                              'Начнем?',
-                              reply_markup=markup_key,)
-        return CommandHandler('start', type_command)
-    else:
-        return CommandHandler('cancel', cancel)
+    action = update.message.text
+    if action == 'Продолжить':
+        update.message.reply_text(f'ОК, посчитаем еще. \n'
+                              f'Выбери с какими числами хочешь работать?\n\n'
+                              '1.Рациональными \n'
+                              '2.Комплексными')
+        return ACTION
+    elif action == 'Завершить':
+        update.message.reply_text(
+        'Мое дело предложить - Ваше отказаться'
+        ' Будет скучно - пиши.')
+        return ConversationHandler.END
 
 
 def cancel(update, _):
@@ -137,7 +132,6 @@ def cancel(update, _):
     update.message.reply_text(
         'Мое дело предложить - Ваше отказаться'
         ' Будет скучно - пиши.'
-        # reply_markup=ReplyKeyboardRemove()
     )
     # Заканчиваем разговор.
     return ConversationHandler.END
@@ -153,11 +147,9 @@ if __name__ == '__main__':
         states={
             TYPE: [MessageHandler(Filters.regex('^(Начнем)$'), type_command)],
             ACTION: [MessageHandler(Filters.text, action_num)],
-            # , CommandHandler('return', return_type)],
             GIVE_NUM: [MessageHandler(Filters.text, give_num)],
             RESULT: [MessageHandler(Filters.text, res)],
             MENU: [MessageHandler(Filters.text, menu)]
-            # , CommandHandler('return', return_type)]
         },
 
         fallbacks=[CommandHandler('cancel', cancel)],
