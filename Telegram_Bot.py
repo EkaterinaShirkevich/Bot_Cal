@@ -1,3 +1,4 @@
+
 from telegram.ext import (
     Updater,
     CommandHandler,
@@ -53,14 +54,22 @@ def action_num(update, _):
     user = update.message.from_user
     logg.entered_logger(user.first_name, update.message.text)
     type_num = update.message.text
-    type_num = int(type_num)
-    update.message.reply_text(f'Выбери дейстиве или /return чтобы вернуться\n\n'
+    #type_num = int(type_num)
+    if type_num != '1' and type_num != '2':
+            update.message.reply_text('Такого пункта нет в списке.\n'
+            'Попробуй еще раз.\n'
+            f'Выбери с какими числами хочешь работать?\n\n'
+                              '1.Рациональными \n'
+                              '2.Комплексными')
+            return ACTION                      
+    else:
+        update.message.reply_text(f'Выбери дейстиве или /return чтобы вернуться\n\n'
                               'Сложение: "+"\n'
                               'Вычитание: "-"\n'
                               'Умножение: "*"\n'
                               'Деление: "/"'
                               )
-    return GIVE_NUM
+        return GIVE_NUM
 
 
 def give_num(update, _):
@@ -75,12 +84,23 @@ def give_num(update, _):
                               '1.Рациональными \n'
                               '2.Комплексными')
         return ACTION
-    elif action != '/return':
-        if type_num == 1:
+    elif action == '+' or action == '-' or action == '*' or action == '/':
+        if type_num == '1':
             update.message.reply_text('Введите 2 числа через пробел: ')
-        elif type_num == 2:
+        elif type_num == '2':
             update.message.reply_text('Введите 4 числа через пробел: ')
         return RESULT
+    else:
+        update.message.reply_text('Такого пункта нет в списке.\n'
+            'Попробуй еще раз.\n'
+            'Выбери дейстиве или /return чтобы вернуться\n\n'
+                              'Сложение: "+"\n'
+                              'Вычитание: "-"\n'
+                              'Умножение: "*"\n'
+                              'Деление: "/"'
+                              )
+        return GIVE_NUM
+
 
 
 def res(update, _):
@@ -89,14 +109,14 @@ def res(update, _):
     global type_num, action, num1
     user = update.message.from_user
     logg.entered_logger(user.first_name, update.message.text)
-    if type_num == 1:
+    if type_num == '1':
         num1 = update.message.text
         num1 = num1.replace(' ', action)
         res1 = round(eval(num1))
         update.message.reply_text(f'Ваш результат: {num1}={res1}\n\n'
         'Может еще примерчик?\n\n '
         'Твои действия?', reply_markup=markup_key)
-    elif type_num == 2:
+    elif type_num == '2':
         num1 = update.message.text
         res1 = compl.cal_compl(num1, action)
         print(res1)
