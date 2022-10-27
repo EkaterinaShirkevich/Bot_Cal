@@ -166,6 +166,7 @@ def menu(update, _):
     global action
     user = update.message.from_user
     logg.entered_logger(user.first_name, update.message.text)
+    action = update.message.text
     if action == 'Продолжить':
         update.message.reply_text(f'ОК, посчитаем еще. \n'
                                   f'Выбери с какими числами хочешь работать?\n\n'
