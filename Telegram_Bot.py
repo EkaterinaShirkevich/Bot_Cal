@@ -123,7 +123,6 @@ def menu(update, _):
     global action
     user = update.message.from_user
     logg.entered_logger(user.first_name, update.message.text)
-    # logger.info("Ответ бота: %s. Пользователь", user.first_name,"Ждет указаний")
     action = update.message.text
     reply_keyboard = [['Рациональные', 'Комплексные']]
     markup_key = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
