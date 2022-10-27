@@ -12,7 +12,6 @@ import excep as ex
 import logg
 import compl
 
-# Token = Token()
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
