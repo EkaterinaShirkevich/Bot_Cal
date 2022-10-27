@@ -99,7 +99,7 @@ def res(update, _):
     elif type_num == 2:
         num1 = update.message.text
         res1 = compl.cal_compl(num1, action)
-        print(res1)
+        # print(res1)
         update.message.reply_text(f'Ваш результат: {res1}\n\n'
         'Может, еще примерчик?\n\n '
         'Твои действия?', reply_markup=markup_key)
