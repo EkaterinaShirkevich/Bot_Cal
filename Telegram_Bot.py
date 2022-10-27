@@ -112,7 +112,7 @@ def res(update, _):
     k = num1.replace('.', '').replace(' ', '')
     lsk = num1.split()
     if lsk[1] == '0' and  action == '/':
-        update.message.reply_text('Извините но на ноль делить не умею.\n'
+        update.message.reply_text('Извините, но на ноль делить не умею.\n'
                                   'Введите числа через пробел: ')
         return RESULT
     else:
