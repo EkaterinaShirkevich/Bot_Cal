@@ -127,17 +127,17 @@ def res(update, _):
                 return MENU
 
         elif type_num == '2' and len(lsk) == 4:
-            # if lsk[3,4] == '0' and action == '/':
-            #     update.message.reply_text('Извините, но на ноль делить не умею.\n'
-            #                               'Введите числа через пробел: ')
-            #     return RESULT
-            # else:
-            res1 = compl.cal_compl(num1, action)
-            update.message.reply_text(f'Ваш результат: {res1}\n\n'
+            if lsk[2] == '0' and lsk[3]== '0' and action == '/':
+                update.message.reply_text('Извините, но на ноль делить не умею.\n'
+                                          'Введите числа через пробел: ')
+                return RESULT
+            else:
+                res1 = compl.cal_compl(num1, action)
+                update.message.reply_text(f'Ваш результат: {res1}\n\n'
                                       'Может, еще примерчик?\n\n '
                                       'Твои действия?', reply_markup=markup_key)
-            logg.result_logger(res1)  # логгер для результата
-            return MENU
+                logg.result_logger(res1)  # логгер для результата
+                return MENU
         else:
             if type_num == '1':
                 update.message.reply_text('Вам надо вести 2 цифры.\n'
