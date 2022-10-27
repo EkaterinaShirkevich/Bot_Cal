@@ -4,12 +4,12 @@ import logg
 
 def cal_compl(ls,i):
 	ls = ls.split()
-	in_real_1 =int(ls[0])
-	in_imag_1 = int(ls[1])
+	in_real_1 =float(ls[0])
+	in_imag_1 = float(ls[1])
 	a = complex(in_real_1, in_imag_1)
 	
-	in_real_2 = int(ls[2])
-	in_imag_2 = int(ls[3])
+	in_real_2 = float(ls[2])
+	in_imag_2 = float(ls[3])
 	b = complex(in_real_2, in_imag_2)
 	
 	if i == "+":
@@ -34,3 +34,4 @@ def cal_compl(ls,i):
 
 # ls = '12 2 2 12'
 # print(cal_compl(ls,'+'))
+

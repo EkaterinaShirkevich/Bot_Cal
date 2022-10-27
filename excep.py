@@ -45,7 +45,7 @@ def digit_number(s):
     while(True):
         i = input(s)
         k = i.replace('.','')
-        k = k.replace('-','')
+        k = k.replace(' ','')
         if k.isdigit():
             logg.entered_logger(i)
             return float(i)

@@ -1,3 +1,4 @@
+
 from telegram.ext import (
     Updater,
     CommandHandler,
@@ -53,14 +54,22 @@ def action_num(update, _):
     user = update.message.from_user
     logg.entered_logger(user.first_name, update.message.text)
     type_num = update.message.text
-    type_num = int(type_num)
-    update.message.reply_text(f'Выбери дейстиве или /return чтобы вернуться\n\n'
-                              'Сложение: "+"\n'
-                              'Вычитание: "-"\n'
-                              'Умножение: "*"\n'
-                              'Деление: "/"'
-                              )
-    return GIVE_NUM
+    #type_num = int(type_num)
+    if type_num != '1' and type_num != '2':
+        update.message.reply_text('Такого пункта нет в списке.\n'
+                                  'Попробуй еще раз.\n'
+                                  f'Выбери с какими числами хочешь работать?\n\n'
+                                  '1.Рациональными \n'
+                                  '2.Комплексными')
+        return ACTION
+    else:
+        update.message.reply_text(f'Выбери дейстиве или /return чтобы вернуться\n\n'
+                                  'Сложение: "+"\n'
+                                  'Вычитание: "-"\n'
+                                  'Умножение: "*"\n'
+                                  'Деление: "/"'
+                                  )
+        return GIVE_NUM
 
 
 def give_num(update, _):
@@ -70,17 +79,27 @@ def give_num(update, _):
     action = update.message.text
     if action == '/return':
         update.message.reply_text(
-        'Ну, ладно. Можешь перевыбрать\n'
-        f'Выбери с какими числами хочешь работать?\n\n'
-                              '1.Рациональными \n'
-                              '2.Комплексными')
+            'Ну, ладно. Можешь перевыбрать\n'
+            f'Выбери с какими числами хочешь работать?\n\n'
+            '1.Рациональными \n'
+            '2.Комплексными')
         return ACTION
-    elif action != '/return':
-        if type_num == 1:
+    elif action == '+' or action == '-' or action == '*' or action == '/':
+        if type_num == '1':
             update.message.reply_text('Введите 2 числа через пробел: ')
-        elif type_num == 2:
+        elif type_num == '2':
             update.message.reply_text('Введите 4 числа через пробел: ')
         return RESULT
+    else:
+        update.message.reply_text('Такого пункта нет в списке.\n'
+                                  'Попробуй еще раз.\n'
+                                  'Выбери дейстиве или /return чтобы вернуться\n\n'
+                                  'Сложение: "+"\n'
+                                  'Вычитание: "-"\n'
+                                  'Умножение: "*"\n'
+                                  'Деление: "/"'
+                                  )
+        return GIVE_NUM
 
 
 def res(update, _):
@@ -89,22 +108,45 @@ def res(update, _):
     global type_num, action, num1
     user = update.message.from_user
     logg.entered_logger(user.first_name, update.message.text)
-    if type_num == 1:
-        num1 = update.message.text
-        num1 = num1.replace(' ', action)
-        res1 = round(eval(num1))
-        update.message.reply_text(f'Ваш результат: {num1}={res1}\n\n'
-        'Может еще примерчик?\n\n '
-        'Твои действия?', reply_markup=markup_key)
-    elif type_num == 2:
-        num1 = update.message.text
-        res1 = compl.cal_compl(num1, action)
+    num1 = update.message.text
+    k = num1.replace('.', '').replace(' ', '')
+    lsk = num1.split()
+    print(len(lsk))
+    if k.isdigit() and len(lsk) >= 2:
+        if type_num == '1' and len(lsk) == 2:
+            # num1 = update.message.text
+            num1 = num1.replace(' ', action)
+            res1 = round(eval(num1), 3)
+            update.message.reply_text(f'Ваш результат: {num1}={res1}\n\n'
+                                      'Может еще примерчик?\n\n '
+                                      'Твои действия?', reply_markup=markup_key)
+            logg.result_logger(res1)  # логгер для результата
+            return MENU
+        elif type_num == '2' and len(lsk) == 4:
+            # num1 = update.message.text
+            res1 = compl.cal_compl(num1, action)
         # print(res1)
-        update.message.reply_text(f'Ваш результат: {res1}\n\n'
-        'Может, еще примерчик?\n\n '
-        'Твои действия?', reply_markup=markup_key)
-    logg.result_logger(res1) # логгер для результата
-    return MENU
+            update.message.reply_text(f'Ваш результат: {res1}\n\n'
+                                      'Может, еще примерчик?\n\n '
+                                      'Твои действия?', reply_markup=markup_key)
+            logg.result_logger(res1)  # логгер для результата
+            return MENU
+        else:
+            if type_num == '1':
+                update.message.reply_text('Вам надо вести 2 цифры.\n'
+                                          'Введите 2 числа через пробел: ')
+            elif type_num == '2':
+                update.message.reply_text('Вам надо вести 4 цифры.\n'
+                                          'Введите 4 числа через пробел: ')
+            return RESULT
+    else:
+        if type_num == '1':
+            update.message.reply_text('Вам надо вводить цифры.\n'
+                                      'Введите 2 числа через пробел: ')
+        elif type_num == '2':
+            update.message.reply_text('Вам надо вводить цифры.\n'
+                                      'Введите 4 числа через пробел: ')
+        return RESULT
 
 
 def menu(update, _):
@@ -115,15 +157,15 @@ def menu(update, _):
     action = update.message.text
     if action == 'Продолжить':
         update.message.reply_text(f'ОК, посчитаем еще. \n'
-                              f'Выбери с какими числами хочешь работать?\n\n'
-                              '1.Рациональными \n'
-                              '2.Комплексными')
+                                  f'Выбери с какими числами хочешь работать?\n\n'
+                                  '1.Рациональными \n'
+                                  '2.Комплексными')
         return ACTION
     elif action == 'Завершить':
         logg.finished_logger(user.first_name, update.message.text)
         update.message.reply_text(
-        'Мое дело предложить - Ваше отказаться'
-        ' Будет скучно - пиши.')
+            'Мое дело предложить - Ваше отказаться'
+            ' Будет скучно - пиши.')
         return ConversationHandler.END
 
 
