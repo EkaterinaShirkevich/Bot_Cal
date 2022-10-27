@@ -6,10 +6,9 @@ from telegram.ext import (
     Filters,
     ConversationHandler,
 )
-from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
+from telegram import ReplyKeyboardMarkup
 import logging
 from Info import Token
-import excep as ex
 import logg
 import compl
 
@@ -54,13 +53,13 @@ def action_num(update, _):
     user = update.message.from_user
     logg.entered_logger(user.first_name, update.message.text)
     type_num = update.message.text
-    #type_num = int(type_num)
     if type_num != '1' and type_num != '2':
         update.message.reply_text('Такого пункта нет в списке.\n'
                                   'Попробуй еще раз.\n'
                                   f'Выбери с какими числами хочешь работать?\n\n'
                                   '1.Рациональными \n'
                                   '2.Комплексными')
+        logg.actions_logger('Введено некорректное значение при выборе типов чисел')                          
         return ACTION
     else:
         update.message.reply_text(f'Выбери дейстиве или /return чтобы вернуться\n\n'
@@ -86,19 +85,20 @@ def give_num(update, _):
         return ACTION
     elif action == '+' or action == '-' or action == '*' or action == '/':
         if type_num == '1':
-            update.message.reply_text('Введите 2 числа через пробел: ')
+            update.message.reply_text('Введи 2 числа через пробел: ')
         elif type_num == '2':
-            update.message.reply_text('Введите 4 числа через пробел: ')
+            update.message.reply_text('Введи 4 числа через пробел: ')
         return RESULT
     else:
         update.message.reply_text('Такого пункта нет в списке.\n'
                                   'Попробуй еще раз.\n'
-                                  'Выбери дейстиве или /return чтобы вернуться\n\n'
+                                  'Выбери действие или /return чтобы вернуться\n\n'
                                   'Сложение: "+"\n'
                                   'Вычитание: "-"\n'
                                   'Умножение: "*"\n'
                                   'Деление: "/"'
                                   )
+        logg.actions_logger('Введено некорректное значение при выборе операций')                          
         return GIVE_NUM
 
 
@@ -114,13 +114,14 @@ def res(update, _):
     if k.isdigit() and len(lsk) >= 2:
         if type_num == '1' and len(lsk) == 2:
             if lsk[1] == '0' and action == '/':
-                update.message.reply_text('Извините, но на ноль делить не умею.\n'
-                                          'Введите числа через пробел: ')
+                update.message.reply_text('Извини, но на ноль делить не умею.\n'
+                                          'Введи числа через пробел: ')
+                logg.actions_logger('Попытка деления на ноль')                          
                 return RESULT
             else:
                 num1 = num1.replace(' ', action)
                 res1 = round(eval(num1), 3)
-                update.message.reply_text(f'Ваш результат: {num1}={res1}\n\n'
+                update.message.reply_text(f'Лови результат: {num1}={res1}\n\n'
                                           'Может еще примерчик?\n\n '
                                           'Твои действия?', reply_markup=markup_key)
                 logg.result_logger(res1)  # логгер для результата
@@ -128,31 +129,34 @@ def res(update, _):
 
         elif type_num == '2' and len(lsk) == 4:
             if lsk[2] == '0' and lsk[3]== '0' and action == '/':
-                update.message.reply_text('Извините, но на ноль делить не умею.\n'
-                                          'Введите числа через пробел: ')
+                update.message.reply_text('Извини, но на ноль делить не умею.\n'
+                                          'Введи числа через пробел: ')
+                logg.actions_logger('Попытка деления на ноль')                          
                 return RESULT
             else:
                 res1 = compl.cal_compl(num1, action)
-                update.message.reply_text(f'Ваш результат: {res1}\n\n'
+                update.message.reply_text(f'Лови результат: {res1}\n\n'
                                       'Может, еще примерчик?\n\n '
                                       'Твои действия?', reply_markup=markup_key)
                 logg.result_logger(res1)  # логгер для результата
                 return MENU
         else:
             if type_num == '1':
-                update.message.reply_text('Вам надо вести 2 цифры.\n'
-                                          'Введите 2 числа через пробел: ')
+                update.message.reply_text('Надо ввести 2 цифры.\n'
+                                          'Введи 2 числа через пробел: ')
             elif type_num == '2':
-                update.message.reply_text('Вам надо вести 4 цифры.\n'
-                                          'Введите 4 числа через пробел: ')
+                update.message.reply_text('Надо ввести 4 цифры.\n'
+                                          'Введи 4 числа через пробел: ')
+            logg.actions_logger('Некорректное значение при вводе чисел')                              
             return RESULT
     else:
         if type_num == '1':
-            update.message.reply_text('Вам надо вводить цифры.\n'
-                                      'Введите 2 числа через пробел: ')
+            update.message.reply_text('Надо вводить цифры.\n'
+                                      'Введи 2 числа через пробел: ')
         elif type_num == '2':
-            update.message.reply_text('Вам надо вводить цифры.\n'
-                                      'Введите 4 числа через пробел: ')
+            update.message.reply_text('Надо вводить цифры.\n'
+                                      'Введи 4 числа через пробел: ')
+        logg.actions_logger('Некорректное значение при вводе чисел')                              
         return RESULT
 
 
@@ -160,8 +164,6 @@ def menu(update, _):
     global action
     user = update.message.from_user
     logg.entered_logger(user.first_name, update.message.text)
-    #logger.info("Ответ бота: %s. Пользователь", user.first_name,"Ждет указаний")
-    action = update.message.text
     if action == 'Продолжить':
         update.message.reply_text(f'ОК, посчитаем еще. \n'
                                   f'Выбери с какими числами хочешь работать?\n\n'
