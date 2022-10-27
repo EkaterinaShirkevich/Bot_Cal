@@ -8,12 +8,12 @@ from telegram.ext import (
 )
 from telegram import ReplyKeyboardMarkup
 import logging
-#from Info import Token
+from Info import Token
 import logg
 import compl
 
 
-Token = '5645070358:AAFTlYqldaV4k17kQNaeuK9TecdcWqGajI0'#Token()
+Token = Token()
 
 
 logging.basicConfig(
