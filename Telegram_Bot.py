@@ -111,44 +111,49 @@ def res(update, _):
     num1 = update.message.text
     k = num1.replace('.', '').replace(' ', '')
     lsk = num1.split()
-    if lsk[1] == '0' and  action == '/':
-        update.message.reply_text('Извините, но на ноль делить не умею.\n'
-                                  'Введите числа через пробел: ')
-        return RESULT
-    else:
-        if k.isdigit() and len(lsk) >= 2:
-            if type_num == '1' and len(lsk) == 2:
+    if k.isdigit() and len(lsk) >= 2:
+        if type_num == '1' and len(lsk) == 2:
+            if lsk[1] == '0' and action == '/':
+                update.message.reply_text('Извините, но на ноль делить не умею.\n'
+                                          'Введите числа через пробел: ')
+                return RESULT
+            else:
                 num1 = num1.replace(' ', action)
                 res1 = round(eval(num1), 3)
                 update.message.reply_text(f'Ваш результат: {num1}={res1}\n\n'
-                                      'Может еще примерчик?\n\n '
-                                      'Твои действия?', reply_markup=markup_key)
+                                          'Может еще примерчик?\n\n '
+                                          'Твои действия?', reply_markup=markup_key)
                 logg.result_logger(res1)  # логгер для результата
                 return MENU
 
-            elif type_num == '2' and len(lsk) == 4:
-                res1 = compl.cal_compl(num1, action)
-                update.message.reply_text(f'Ваш результат: {res1}\n\n'
+        elif type_num == '2' and len(lsk) == 4:
+            # if lsk[3,4] == '0' and action == '/':
+            #     update.message.reply_text('Извините, но на ноль делить не умею.\n'
+            #                               'Введите числа через пробел: ')
+            #     return RESULT
+            # else:
+            res1 = compl.cal_compl(num1, action)
+            update.message.reply_text(f'Ваш результат: {res1}\n\n'
                                       'Может, еще примерчик?\n\n '
                                       'Твои действия?', reply_markup=markup_key)
-                logg.result_logger(res1)  # логгер для результата
-                return MENU
-            else:
-                if type_num == '1':
-                    update.message.reply_text('Вам надо вести 2 цифры.\n'
-                                          'Введите 2 числа через пробел: ')
-                elif type_num == '2':
-                    update.message.reply_text('Вам надо вести 4 цифры.\n'
-                                          'Введите 4 числа через пробел: ')
-                return RESULT
+            logg.result_logger(res1)  # логгер для результата
+            return MENU
         else:
             if type_num == '1':
-                update.message.reply_text('Вам надо вводить цифры.\n'
-                                      'Введите 2 числа через пробел: ')
+                update.message.reply_text('Вам надо вести 2 цифры.\n'
+                                          'Введите 2 числа через пробел: ')
             elif type_num == '2':
-                update.message.reply_text('Вам надо вводить цифры.\n'
-                                      'Введите 4 числа через пробел: ')
+                update.message.reply_text('Вам надо вести 4 цифры.\n'
+                                          'Введите 4 числа через пробел: ')
             return RESULT
+    else:
+        if type_num == '1':
+            update.message.reply_text('Вам надо вводить цифры.\n'
+                                      'Введите 2 числа через пробел: ')
+        elif type_num == '2':
+            update.message.reply_text('Вам надо вводить цифры.\n'
+                                      'Введите 4 числа через пробел: ')
+        return RESULT
 
 
 def menu(update, _):
