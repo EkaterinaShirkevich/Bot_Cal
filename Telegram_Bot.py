@@ -111,7 +111,7 @@ def res(update, _):
     num1 = update.message.text
     k = num1.replace('.', '').replace(' ', '')
     lsk = num1.split()
-    print(len(lsk))
+
     if k.isdigit() and len(lsk) >= 2:
         if type_num == '1' and len(lsk) == 2:
             # num1 = update.message.text
